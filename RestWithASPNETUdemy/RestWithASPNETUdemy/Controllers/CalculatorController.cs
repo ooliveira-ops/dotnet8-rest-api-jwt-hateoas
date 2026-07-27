@@ -26,27 +26,6 @@ namespace RestWithASPNETUdemy.Controllers
 			return BadRequest("Invalid Input");
 		}
 
-		private bool IsNumeric(string strNumber)
-		{
-			double number;
-			bool isNumber = double.TryParse(
-			strNumber, 
-			System.Globalization.NumberStyles.Any, 
-			System.Globalization.NumberFormatInfo.InvariantInfo,
-			out number);
-			return isNumber;
-		}
-
-		private decimal ConvertToDecimal(string strNumber)
-		{
-			decimal decimalValue;
-			if (decimal.TryParse(strNumber, out decimalValue))
-			{
-				return (decimalValue);
-			}
-			return 0;
-		}
-
 		[HttpGet("sub/{firstNumber}/{secondNumber}")]
 		public IActionResult Sub(string firstNumber, string secondNumber)
 		{
@@ -71,5 +50,41 @@ namespace RestWithASPNETUdemy.Controllers
 			}
 			return BadRequest("Invalid Input");
 		}
+
+
+		[HttpGet("med/{firstNumber}/{secondNumber}")]
+		public IActionResult Div(string firstNumber, string secondNumber)
+		{
+			if (IsNumeric(firstNumber) && IsNumeric(secondNumber))
+			{
+				var sub = (ConvertToDecimal(firstNumber) + ConvertToDecimal(secondNumber)) / 2;
+
+				return Ok(sub.ToString());
+			}
+			return BadRequest("Invalid Input");
+
+		}
+
+		private bool IsNumeric(string strNumber)
+		{
+			double number;
+			bool isNumber = double.TryParse(
+			strNumber,
+			System.Globalization.NumberStyles.Any,
+			System.Globalization.NumberFormatInfo.InvariantInfo,
+			out number);
+			return isNumber;
+		}
+
+		private decimal ConvertToDecimal(string strNumber)
+		{
+			decimal decimalValue;
+			if (decimal.TryParse(strNumber, out decimalValue))
+			{
+				return (decimalValue);
+			}
+			return 0;
+		}
+
 	}
 }
