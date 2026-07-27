@@ -46,5 +46,17 @@ namespace RestWithASPNETUdemy.Controllers
 			}
 			return 0;
 		}
+
+		[HttpGet("sub/{firstNumber}/{secondNumber}")]
+		public IActionResult Sub(string firstNumber, string secondNumber)
+		{
+			if (IsNumeric(firstNumber) && IsNumeric(secondNumber))
+			{
+				var sub = ConvertToDecimal(firstNumber) - ConvertToDecimal(secondNumber);
+
+				return Ok(sub.ToString());
+			}
+			return BadRequest("Invalid Input");
+		}
 	}
 }
