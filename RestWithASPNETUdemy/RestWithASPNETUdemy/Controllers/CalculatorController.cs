@@ -58,5 +58,18 @@ namespace RestWithASPNETUdemy.Controllers
 			}
 			return BadRequest("Invalid Input");
 		}
+
+
+		[HttpGet("mult/{firstNumber}/{secondNumber}")]
+		public IActionResult Mult(string firstNumber, string secondNumber)
+		{
+			if (IsNumeric(firstNumber) && IsNumeric(secondNumber))
+			{
+				var sub = ConvertToDecimal(firstNumber) * ConvertToDecimal(secondNumber);
+
+				return Ok(sub.ToString());
+			}
+			return BadRequest("Invalid Input");
+		}
 	}
 }
