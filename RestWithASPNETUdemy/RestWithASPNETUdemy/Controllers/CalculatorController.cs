@@ -65,6 +65,21 @@ namespace RestWithASPNETUdemy.Controllers
 
 		}
 
+
+		[HttpGet("sqroot/{firstNumber}")]
+		public IActionResult SquareRoot(string firstNumber)
+		{
+			if (IsNumeric(firstNumber))
+			{
+				var square = Math.Sqrt((double)ConvertToDecimal(firstNumber));
+
+				return Ok(square.ToString());
+			}
+			return BadRequest("Invalid Input");
+
+		}
+
+
 		private bool IsNumeric(string strNumber)
 		{
 			double number;
