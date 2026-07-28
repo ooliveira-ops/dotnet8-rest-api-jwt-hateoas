@@ -19,7 +19,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
         "launchBrowser": true,
-      "launchUrl": "calculator/sum/1/2",
+      "launchUrl": "api/person",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

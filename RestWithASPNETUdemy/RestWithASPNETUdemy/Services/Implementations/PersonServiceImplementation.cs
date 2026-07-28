@@ -55,7 +55,7 @@ namespace RestWithASPNETUdemy.Services.Implementations
 			{
 				Id = IncrementAndGet(),
 				FirstName = "Person Name" + i,
-				LastName = "PErson LastName" + i,
+				LastName = "Person LastName" + i,
 				Address = "Some Address" + i,
 				Gender = "Male"
 			};
