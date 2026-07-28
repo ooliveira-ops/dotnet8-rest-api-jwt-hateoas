@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using RestWithASPNETUdemy.Model.Context;
 using RestWithASPNETUdemy.Services;
 using RestWithASPNETUdemy.Services.Implementations;
 
@@ -6,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+//Isso é para configurar a conexão com o banco de dados SQLServer usando o Entity Framework
+var connectionString = builder.Configuration["SQLServerConnection:Connection"];
+builder.Services.AddDbContext<SQLServerContext>(options => options.UseSqlServer(connectionString));
 
 // Register services for Dependency Injection
 builder.Services.AddScoped<IPersonService, PersonServiceImplementation>();
