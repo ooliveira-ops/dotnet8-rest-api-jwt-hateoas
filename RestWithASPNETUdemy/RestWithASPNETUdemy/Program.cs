@@ -13,6 +13,8 @@ builder.Services.AddControllers();
 var connectionString = builder.Configuration["SQLServerConnection:Connection"];
 builder.Services.AddDbContext<SQLServerContext>(options => options.UseSqlServer(connectionString));
 
+builder.Services.AddApiVersioning();
+
 // Register services for Dependency Injection
 builder.Services.AddScoped<IPersonService, PersonServiceImplementation>();
 
