@@ -1,17 +1,18 @@
 ﻿using System.Security.Cryptography;
 using Microsoft.SqlServer.Server;
+using RestWithASPNETUdemy.Business;
 using RestWithASPNETUdemy.Model;
 using RestWithASPNETUdemy.Model.Context;
 
-namespace RestWithASPNETUdemy.Services.Implementations
+namespace RestWithASPNETUdemy.Repository.Implementations
 {
-	public class PersonServiceImplementation : IPersonService
+	public class PersonRepositoryImplementation : IPersonRepository
 	{
 
 
 		private SQLServerContext _context;
 
-		public PersonServiceImplementation(SQLServerContext context) 
+		public PersonRepositoryImplementation(SQLServerContext context) 
 		{
 			_context = context;
 		}
@@ -77,7 +78,7 @@ namespace RestWithASPNETUdemy.Services.Implementations
 			}
 		}
 
-		private bool Exists(long id)
+		public bool Exists(long id)
 		{
 			return _context.Persons.Any(p => p.Id.Equals(id));
 		}

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using RestWithASPNETUdemy.Services;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Mvc;
+using RestWithASPNETUdemy.Business;
 using RestWithASPNETUdemy.Model;
-using Asp.Versioning;
 
 namespace RestWithASPNETUdemy.Controllers
 {
@@ -13,13 +13,13 @@ namespace RestWithASPNETUdemy.Controllers
 	{
 
 		private readonly ILogger<PersonController> _logger;
-		private readonly IPersonService _personService;
+		private readonly IPersonBusiness _personBusiness;
 
 		//Injecao de dependencia
-		public PersonController(ILogger<PersonController> logger, IPersonService personService)
+		public PersonController(ILogger<PersonController> logger, IPersonBusiness personBusiness)
 		{	//construtor
 			_logger = logger;
-			_personService = personService;			
+			_personBusiness = personBusiness;			
 		}
 
 		[HttpPost]
@@ -28,7 +28,7 @@ namespace RestWithASPNETUdemy.Controllers
 			if (person == null)
 				return BadRequest();
 
-			return Ok(_personService.Create(person));
+			return Ok(_personBusiness.Create(person));
 		}
 
 		[HttpPut]
@@ -37,14 +37,14 @@ namespace RestWithASPNETUdemy.Controllers
 			if (person == null)
 				return BadRequest();
 
-			var updatedPerson = _personService.Update(person);
+			var updatedPerson = _personBusiness.Update(person);
 			return Ok(updatedPerson);
 		}
 
 		[HttpGet("{id}")]
 		public IActionResult FindById(long id)
 		{
-			var person = _personService.FindById(id);
+			var person = _personBusiness.FindById(id);
 			if (person == null)
 				return NotFound("Person not found");
 
@@ -54,7 +54,7 @@ namespace RestWithASPNETUdemy.Controllers
 		[HttpGet]
 		public IActionResult FindAll()
 		{
-			var persons = _personService.FindAll();
+			var persons = _personBusiness.FindAll();
 			return Ok(persons);
 		}
 
@@ -64,7 +64,7 @@ namespace RestWithASPNETUdemy.Controllers
 		{
 			if (id <= 0)
 			return BadRequest("Invalid Id");
-			_personService.Delete(id);
+			_personBusiness.Delete(id);
 			return NoContent();
 		}
 	}
