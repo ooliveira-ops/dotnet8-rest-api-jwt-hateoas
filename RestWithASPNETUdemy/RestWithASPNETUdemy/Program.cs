@@ -7,6 +7,7 @@ using RestWithASPNETUdemy.Repository.Implementations;
 using Microsoft.Data.SqlClient;
 using EvolveDb;
 using Serilog;
+using RestWithASPNETUdemy.Repository.Generic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,9 +27,10 @@ builder.Services.AddApiVersioning();
 
 // Register services for Dependency Injection
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
-builder.Services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
+builder.Services.AddScoped<IRepository, PersonRepositoryImplementation>();
 builder.Services.AddScoped<IBookRepository, BookRepositoryImplementation>();
-builder.Services.AddScoped<IBookBusiness, BookServiceImplementation>();
+builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
 // Add logging
 builder.Services.AddLogging();

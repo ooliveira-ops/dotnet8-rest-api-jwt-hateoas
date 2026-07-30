@@ -6,7 +6,7 @@ using RestWithASPNETUdemy.Model.Context;
 
 namespace RestWithASPNETUdemy.Repository.Implementations
 {
-	public class PersonRepositoryImplementation : IPersonRepository
+	public class PersonRepositoryImplementation : IRepository
 	{
 
 
@@ -65,7 +65,8 @@ namespace RestWithASPNETUdemy.Repository.Implementations
 		public void Delete(long id)
 		{
 			var result = _context.Persons.SingleOrDefault(p => p.Id.Equals(id));
-			if (result != null) {
+			if (result != null) 
+			{ 
 				try
 				{
 					_context.Persons.Remove(result);

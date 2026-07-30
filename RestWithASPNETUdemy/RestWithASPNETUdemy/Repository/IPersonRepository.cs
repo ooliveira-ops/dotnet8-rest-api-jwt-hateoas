@@ -2,7 +2,7 @@
 
 namespace RestWithASPNETUdemy.Repository
 {
-	public interface IPersonRepository
+	public interface IRepository
 	{
 		Person Create (Person person);
 		Person FindById (long id);
