@@ -1,10 +1,12 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using RestWithASPNETUdemy.Business;
 using RestWithASPNETUdemy.Business.Implementations;
 using RestWithASPNETUdemy.Model.Context;
 using RestWithASPNETUdemy.Repository;
 using RestWithASPNETUdemy.Repository.Implementations;
+using Microsoft.Data.SqlClient;
+using EvolveDb;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,11 @@ builder.Services.AddControllers();
 //Isso é para configurar a conexão com o banco de dados SQLServer usando o Entity Framework
 var connectionString = builder.Configuration["SQLServerConnection:Connection"];
 builder.Services.AddDbContext<SQLServerContext>(options => options.UseSqlServer(connectionString));
+
+if (builder.Environment.IsDevelopment())
+{
+	MigrationDatabase(connectionString);
+}
 
 builder.Services.AddApiVersioning();
 
@@ -40,4 +47,21 @@ app.MapControllers();
 
 app.Run();
 
-
+void MigrationDatabase(string connection)
+{
+	try
+	{
+		var evolveConnection = new SqlConnection(connection);
+		var evolve = new Evolve(evolveConnection, msg => Log.Information(msg))
+		{
+			Locations = new List<string> { "db/migrations", "db/dataset" },
+			IsEraseDisabled = true
+		};
+		evolve.Migrate();
+	}
+	catch (Exception ex)
+	{
+		Log.Error("Database migration failed: {Error}", ex.Message);
+		throw;
+	}
+}
