@@ -40,3 +40,7 @@ Thumbs.db
 *.pfx
 *.key
 *.pem
+
+# Migrations
+db/migrations/
+db/dataset/
