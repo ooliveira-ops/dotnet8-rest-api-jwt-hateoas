@@ -10,9 +10,9 @@ namespace RestWithASPNETUdemy.Business.Implementations
 	public class PersonBusinessImplementation : IPersonBusiness
 	{
 
-		private readonly IRepository _repository;
+		private readonly IRepository<Person> _repository;
 
-		public PersonBusinessImplementation(IRepository repository) 
+		public PersonBusinessImplementation(IRepository<Person> repository)
 		{
 			_repository = repository;
 		}
