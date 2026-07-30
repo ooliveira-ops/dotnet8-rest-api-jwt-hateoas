@@ -27,6 +27,8 @@ builder.Services.AddApiVersioning();
 // Register services for Dependency Injection
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
 builder.Services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
+builder.Services.AddScoped<IBookRepository, BookRepositoryImplementation>();
+builder.Services.AddScoped<IBookBusiness, BookServiceImplementation>();
 
 // Add logging
 builder.Services.AddLogging();
