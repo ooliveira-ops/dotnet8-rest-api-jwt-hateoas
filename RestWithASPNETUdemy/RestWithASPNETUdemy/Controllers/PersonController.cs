@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using RestWithASPNETUdemy.Business;
+using RestWithASPNETUdemy.Data.VO;
 using RestWithASPNETUdemy.Model;
 
 namespace RestWithASPNETUdemy.Controllers
@@ -23,7 +24,7 @@ namespace RestWithASPNETUdemy.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Create([FromBody] Person person)
+		public IActionResult Create([FromBody] PersonVO person)
 		{
 			if (person == null)
 				return BadRequest();
@@ -32,7 +33,7 @@ namespace RestWithASPNETUdemy.Controllers
 		}
 
 		[HttpPut]
-		public IActionResult Update([FromBody] Person person)
+		public IActionResult Update([FromBody] PersonVO person)
 		{
 			if (person == null)
 				return BadRequest();
@@ -46,7 +47,7 @@ namespace RestWithASPNETUdemy.Controllers
 		{
 			var person = _personBusiness.FindById(id);
 			if (person == null)
-				return NotFound("Person not found");
+				return NotFound("PersonVO not found");
 
 			return Ok(person);
 		}
