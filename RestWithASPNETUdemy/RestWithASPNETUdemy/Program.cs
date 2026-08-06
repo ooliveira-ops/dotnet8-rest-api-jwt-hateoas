@@ -13,8 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+//Custom Serialization
+builder.Services.AddControllers(options =>
+{
+	options.RespectBrowserAcceptHeader = true; // Respeita o cabeçalho Accept do navegador/cliente
+	options.FormatterMappings.SetMediaTypeMappingForFormat("xml", "application/xml"); // Mapeia o formato xml
+	options.FormatterMappings.SetMediaTypeMappingForFormat("json", "application/json"); // Mapeia o formato json
+	options.ReturnHttpNotAcceptable = true;   // Retorna 406 Not Acceptable se o formato não for suportado
+}).AddXmlSerializerFormatters();
 
-//Isso é para configurar a conexão com o banco de dados SQLServer usando o Entity Framework
+//Isso é para configurar a conexão com o banco de dados SQLServer usando o Entity Framework
 var connectionString = builder.Configuration["SQLServerConnection:Connection"];
 builder.Services.AddDbContext<SQLServerContext>(options => options.UseSqlServer(connectionString));
 
