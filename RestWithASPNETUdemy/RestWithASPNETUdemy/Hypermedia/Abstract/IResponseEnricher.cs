@@ -3,10 +3,10 @@
 namespace RestWithASPNETUdemy.Hypermedia.Abstract
 {   
 	public interface IResponseEnricher
-	{   //esse CanEnrich é para verificar se o tipo de objeto que está sendo retornado é do tipo que o Enricher consegue enriquecer, ou seja, se ele consegue adicionar os links de hypermedia
-		bool CanEnrich(ResultExecutedContext context);
+	{   //esse CanEnrich verifica se a resposta pode ser enrichida
+		bool CanEnrich(ResultExecutingContext context);
 
-		//esse Enrich é para adicionar os links de hypermedia no objeto que está sendo retornado
-		Task Enrich(ResultExecutedContext context);
+		//esse Enrich enriquece a resposta
+		Task Enrich(ResultExecutingContext context);
 	}
 }
