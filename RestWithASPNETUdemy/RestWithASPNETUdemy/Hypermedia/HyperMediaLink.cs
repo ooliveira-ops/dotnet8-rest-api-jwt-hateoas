@@ -10,7 +10,7 @@ namespace RestWithASPNETUdemy.Hypermedia
 		//tipo de link que vai ser usado
 		private string href;
 
-		//tipo de link que vai ser usado
+		//tipo de link que vai ser usado 
 		public string Href 
 		{
 			get
