@@ -8,6 +8,8 @@ using Microsoft.Data.SqlClient;
 using EvolveDb;
 using Serilog;
 using RestWithASPNETUdemy.Repository.Generic;
+using RestWithASPNETUdemy.Hypermedia.Filters;
+using RestWithASPNETUdemy.Hypermedia.Enricher;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,11 @@ builder.Services.AddControllers(options =>
 	options.FormatterMappings.SetMediaTypeMappingForFormat("json", "application/json"); // Mapeia o formato json
 	options.ReturnHttpNotAcceptable = true;   // Retorna 406 Not Acceptable se o formato não for suportado
 }).AddXmlSerializerFormatters();
+
+var filterOptions = new HyperMediaFilterOptions();
+filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
+builder.Services.AddSingleton(filterOptions);
 
 //Isso é para configurar a conexão com o banco de dados SQLServer usando o Entity Framework
 var connectionString = builder.Configuration["SQLServerConnection:Connection"];
@@ -56,6 +63,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.MapControllers();
+app.MapControllerRoute("DefaultApi", "{controller=values}/v{version=apiVersion}/{id?}");
 
 app.Run();
 

@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using RestWithASPNETUdemy.Hypermedia;
+using RestWithASPNETUdemy.Hypermedia.Abstract;
 using RestWithASPNETUdemy.Model.Base;
 
 namespace RestWithASPNETUdemy.Data.VO
 {
-	public class PersonVO
+	public class PersonVO : ISupportsHypermedia
 	{
 		// Custom Serialization é feito com o atributo JsonPropertyName, que permite definir o nome da propriedade no JSON
 		// [JsonPropertyName("code")]
@@ -21,5 +23,8 @@ namespace RestWithASPNETUdemy.Data.VO
 
 		// [JsonPropertyName("sex")]
 		public string Gender { get; set;}
+
+		// Suporta Hypermedia Links
+		public List<HyperMediaLink> Links { get; set; } = new List<HyperMediaLink>();
 	}
 }

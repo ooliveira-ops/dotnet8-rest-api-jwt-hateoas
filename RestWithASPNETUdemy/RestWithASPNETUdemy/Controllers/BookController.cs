@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RestWithASPNETUdemy.Business;
 using RestWithASPNETUdemy.Data.VO;
+using RestWithASPNETUdemy.Hypermedia.Filters;
 using RestWithASPNETUdemy.Model;
 
 namespace RestWithASPNETUdemy.Controllers
@@ -22,26 +23,16 @@ namespace RestWithASPNETUdemy.Controllers
 			_bookBusiness = bookBusiness;
 		}
 
-		[HttpPost]
-		public IActionResult Create([FromBody] BookVO book)
+		[HttpGet]
+		[TypeFilter(typeof(HyperMediaFilter))]
+		public IActionResult FindAll()
 		{
-			if (book == null)
-				return BadRequest();
-
-			return Ok(_bookBusiness.Create(book));
-		}
-
-		[HttpPut]
-		public IActionResult Update([FromBody] BookVO book)
-		{
-			if (book == null)
-				return BadRequest();
-
-			var updatedBook = _bookBusiness.Update(book);
-			return Ok(updatedBook);
+			var books = _bookBusiness.FindAll();
+			return Ok(books);
 		}
 
 		[HttpGet("{id}")]
+		[TypeFilter(typeof(HyperMediaFilter))]
 		public IActionResult FindById(long id)
 		{
 			var book = _bookBusiness.FindById(id);
@@ -51,13 +42,26 @@ namespace RestWithASPNETUdemy.Controllers
 			return Ok(book);
 		}
 
-		[HttpGet]
-		public IActionResult FindAll()
+		[HttpPost]
+		[TypeFilter(typeof(HyperMediaFilter))]
+		public IActionResult Create([FromBody] BookVO book)
 		{
-			var books = _bookBusiness.FindAll();
-			return Ok(books);
+			if (book == null)
+				return BadRequest();
+
+			return Ok(_bookBusiness.Create(book));
 		}
 
+		[HttpPut]
+		[TypeFilter(typeof(HyperMediaFilter))]
+		public IActionResult Update([FromBody] BookVO book)
+		{
+			if (book == null)
+				return BadRequest();
+
+			var updatedBook = _bookBusiness.Update(book);
+			return Ok(updatedBook);
+		}
 
 		[HttpDelete("{id}")]
 		public IActionResult Delete(long id)

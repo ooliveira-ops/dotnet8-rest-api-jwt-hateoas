@@ -8,7 +8,7 @@ using RestWithASPNETUdemy.Hypermedia.Abstract;
 namespace RestWithASPNETUdemy.Hypermedia
 {
 	//classe abstrata que vai ser usada para enriquecer a resposta(HATEOAS)
-	public abstract class ContentResponseEnricher<T> : IResponseEnricher where T : ISupportHypermedia
+	public abstract class ContentResponseEnricher<T> : IResponseEnricher where T : ISupportsHypermedia
 	{
 		public ContentResponseEnricher()
 		{
@@ -16,7 +16,7 @@ namespace RestWithASPNETUdemy.Hypermedia
 		}
 
 		//método que verifica se o tipo de conteúdo é do tipo T ou uma lista de T
-		public bool CanEnrich(Type contentType)
+		public virtual bool CanEnrich(Type contentType)
 		{
 			return contentType == typeof(T) || 
 			contentType == typeof(List<T>);

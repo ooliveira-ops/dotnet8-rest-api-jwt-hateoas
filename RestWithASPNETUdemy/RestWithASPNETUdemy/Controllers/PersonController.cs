@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RestWithASPNETUdemy.Business;
 using RestWithASPNETUdemy.Data.VO;
+using RestWithASPNETUdemy.Hypermedia.Filters;
 using RestWithASPNETUdemy.Model;
 
 namespace RestWithASPNETUdemy.Controllers
@@ -23,26 +24,16 @@ namespace RestWithASPNETUdemy.Controllers
 			_personBusiness = personBusiness;			
 		}
 
-		[HttpPost]
-		public IActionResult Create([FromBody] PersonVO person)
+		[HttpGet]
+		[TypeFilter(typeof(HyperMediaFilter))]
+		public IActionResult FindAll()
 		{
-			if (person == null)
-				return BadRequest();
-
-			return Ok(_personBusiness.Create(person));
-		}
-
-		[HttpPut]
-		public IActionResult Update([FromBody] PersonVO person)
-		{
-			if (person == null)
-				return BadRequest();
-
-			var updatedPerson = _personBusiness.Update(person);
-			return Ok(updatedPerson);
+			var persons = _personBusiness.FindAll();
+			return Ok(persons);
 		}
 
 		[HttpGet("{id}")]
+		[TypeFilter(typeof(HyperMediaFilter))]
 		public IActionResult FindById(long id)
 		{
 			var person = _personBusiness.FindById(id);
@@ -52,13 +43,26 @@ namespace RestWithASPNETUdemy.Controllers
 			return Ok(person);
 		}
 
-		[HttpGet]
-		public IActionResult FindAll()
+		[HttpPost]
+		[TypeFilter(typeof(HyperMediaFilter))]
+		public IActionResult Create([FromBody] PersonVO person)
 		{
-			var persons = _personBusiness.FindAll();
-			return Ok(persons);
+			if (person == null)
+				return BadRequest();
+
+			return Ok(_personBusiness.Create(person));
 		}
 
+		[HttpPut]
+		[TypeFilter(typeof(HyperMediaFilter))]
+		public IActionResult Update([FromBody] PersonVO person)
+		{
+			if (person == null)
+				return BadRequest();
+
+			var updatedPerson = _personBusiness.Update(person);
+			return Ok(updatedPerson);
+		}
 
 		[HttpDelete("{id}")]
 		public IActionResult Delete(long id)
