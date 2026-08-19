@@ -10,6 +10,7 @@ using Serilog;
 using RestWithASPNETUdemy.Repository.Generic;
 using RestWithASPNETUdemy.Hypermedia.Filters;
 using RestWithASPNETUdemy.Hypermedia.Enricher;
+using Microsoft.AspNetCore.Rewrite;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,21 @@ if (builder.Environment.IsDevelopment())
 
 builder.Services.AddApiVersioning();
 
+builder.Services.AddSwaggerGen(c =>
+{
+	c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+	{
+		Title = "Rest API's From 0 to Azure this ASP.NET Core 8 and Docker",
+		Version = "v1",
+		Description = "API RESTful developed in course 'Rest API's From 0 to Azure this ASP.NET Core 8 and Docker'",
+		Contact = new Microsoft.OpenApi.Models.OpenApiContact
+		{
+			Name = "Filipe Oliveira",
+			Url = new Uri("https://github.com/ooliveira-ops")
+		}
+	});
+});
+
 // Register services for Dependency Injection
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
@@ -61,6 +77,16 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseSwagger();
+app.UseSwaggerUI(c => {
+	c.SwaggerEndpoint("/swagger/v1/swagger.json",
+	"RestWithASPNETUdemy .NET 8 v1");
+});
+
+var option = new RewriteOptions();
+option.AddRedirect("^$", "swagger");
+app.UseRewriter(option);
 
 app.MapControllers();
 app.MapControllerRoute("DefaultApi", "{controller=values}/v{version=apiVersion}/{id?}");
