@@ -14,6 +14,17 @@ using Microsoft.AspNetCore.Rewrite;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Cors configuration
+builder.Services.AddCors(Options =>
+{
+	Options.AddDefaultPolicy(builder =>
+	{
+		builder.AllowAnyOrigin()
+			   .AllowAnyMethod()
+			   .AllowAnyHeader();
+	});
+});
+
 // Add services to the container.
 builder.Services.AddControllers();
 //Custom Serialization
@@ -77,6 +88,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseCors();
 
 app.UseSwagger();
 app.UseSwaggerUI(c => {
