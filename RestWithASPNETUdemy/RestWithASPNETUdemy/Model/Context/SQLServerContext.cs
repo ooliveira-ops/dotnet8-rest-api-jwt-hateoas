@@ -11,5 +11,6 @@ namespace RestWithASPNETUdemy.Model.Context
 		//aqui será feita a conexão com a tabela - "DbSet" representa uma tabela
 		public DbSet<Person> Persons { get; set; }
 		public DbSet<Book> Books { get; set; }
+		public DbSet<User> Users { get; set; }
 	}
 }

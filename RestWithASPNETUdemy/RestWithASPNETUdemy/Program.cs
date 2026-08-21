@@ -11,6 +11,8 @@ using RestWithASPNETUdemy.Repository.Generic;
 using RestWithASPNETUdemy.Hypermedia.Filters;
 using RestWithASPNETUdemy.Hypermedia.Enricher;
 using Microsoft.AspNetCore.Rewrite;
+using RestWithASPNETUdemy.Services;
+using RestWithASPNETUdemy.Services.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,6 +75,8 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IBookRepository, BookRepositoryImplementation>();
 builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+//builder.Services.AddScoped<ITokenService, TokenService>();
+
 
 // Add logging
 builder.Services.AddLogging();
