@@ -1,18 +1,24 @@
+using System.Text;
+using EvolveDb;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Rewrite;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using RestWithASPNETUdemy.Business;
 using RestWithASPNETUdemy.Business.Implementations;
+using RestWithASPNETUdemy.Configurations;
+using RestWithASPNETUdemy.Hypermedia.Enricher;
+using RestWithASPNETUdemy.Hypermedia.Filters;
 using RestWithASPNETUdemy.Model.Context;
 using RestWithASPNETUdemy.Repository;
-using RestWithASPNETUdemy.Repository.Implementations;
-using Microsoft.Data.SqlClient;
-using EvolveDb;
-using Serilog;
 using RestWithASPNETUdemy.Repository.Generic;
-using RestWithASPNETUdemy.Hypermedia.Filters;
-using RestWithASPNETUdemy.Hypermedia.Enricher;
-using Microsoft.AspNetCore.Rewrite;
+using RestWithASPNETUdemy.Repository.Implementations;
 using RestWithASPNETUdemy.Services;
 using RestWithASPNETUdemy.Services.Implementations;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,7 +81,45 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IBookRepository, BookRepositoryImplementation>();
 builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
-//builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddScoped<ILoginBusiness, LoginBusinessImplementation>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+
+// Configure JWT Authentication
+var tokenConfigurations = new TokenConfiguration(); // -> Cria o objeto vazio
+new ConfigureFromConfigurationOptions<TokenConfiguration>(
+	builder.Configuration.GetSection("TokenConfiguration")) // -> Pega a seção do appsettings.json e configura o objeto vazio
+	.Configure(tokenConfigurations);
+builder.Services.AddSingleton(tokenConfigurations); // -> Registra ele na DI
+
+builder.Services.AddAuthentication(options => // -> define QUAL esquema de autenticação usar (JWT Bearer)
+{
+	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options => // -> usa tokenConfigurations pra validar o token
+{
+	var paramsValidation = options.TokenValidationParameters;
+	paramsValidation.ValidateIssuer = true;
+	paramsValidation.ValidateAudience = true;
+	paramsValidation.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfigurations.Secret));
+	paramsValidation.ValidAudience = tokenConfigurations.Audience;
+	paramsValidation.ValidIssuer = tokenConfigurations.Issuer;
+	paramsValidation.ValidateIssuerSigningKey = true;
+	paramsValidation.ValidateLifetime = true;
+	paramsValidation.ClockSkew = TimeSpan.Zero;
+});
+
+// Defines who is allowed to access an endpoint after it is already authenticated.
+builder.Services.AddAuthorization(auth =>
+{
+// Cria a política de autorização "Bearer": exige que o usuário
+// esteja autenticado via JWT (token válido) para acessar o recurso
+
+	auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+		.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+		.RequireAuthenticatedUser().Build());
+});
 
 
 // Add logging
@@ -95,6 +139,11 @@ app.UseRouting();
 
 app.UseCors();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+
+// Enable Swagger middleware
 app.UseSwagger();
 app.UseSwaggerUI(c => {
 	c.SwaggerEndpoint("/swagger/v1/swagger.json",
@@ -105,11 +154,13 @@ var option = new RewriteOptions();
 option.AddRedirect("^$", "swagger");
 app.UseRewriter(option);
 
+
 app.MapControllers();
 app.MapControllerRoute("DefaultApi", "{controller=values}/v{version=apiVersion}/{id?}");
 
 app.Run();
 
+// Here is the method to perform database migration using Evolve
 void MigrationDatabase(string connection)
 {
 	try

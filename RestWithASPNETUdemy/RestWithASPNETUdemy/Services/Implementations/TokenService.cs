@@ -18,7 +18,7 @@ namespace RestWithASPNETUdemy.Services.Implementations
 			_configuration = configuration;
 		}
 
-		public string GenerateAcessToken(IEnumerable<Claim> claims)
+		public string GenerateAccessToken(IEnumerable<Claim> claims)
 		{
 			// Cria uma chave simétrica a partir da secret configurado.
 			var secretKet = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Secret));
