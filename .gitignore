@@ -4,6 +4,7 @@
 !.env.example
 appsettings.Development.json
 appsettings.*.local.json
+appsettings.json
 
 # Build do .NET
 bin/
@@ -42,5 +43,5 @@ Thumbs.db
 *.pem
 
 # Migrations
-db/migrations/
-db/dataset/
+**/db/migrations/
+**/db/dataset/
