@@ -7,7 +7,8 @@ namespace RestWithASPNETUdemy.Data.Converter.Contract.Implementations
 	{
 		public Person Parse(PersonVO origin)
 		{ //Ele verifica se o objeto de origem é nulo e, em caso afirmativo, retorna nulo.
-		  //Caso contrário, ele cria um novo objeto Person e copia os valores das propriedades do objeto de origem para o novo objeto.
+		  //Caso contrário, ele cria um novo objeto Person e copia os valores das propriedades do
+		  //objeto de origem para o novo objeto.
 
 			if (origin == null) return null;
 			return new Person
@@ -35,7 +36,8 @@ namespace RestWithASPNETUdemy.Data.Converter.Contract.Implementations
 		}
 
 		//Aqui temos dois métodos Parse que recebem uma lista de objetos de origem (PersonVO ou Person).
-		//Eles utilizam o método Select do LINQ para aplicar a conversão a cada item da lista de origem e, em seguida, convertem o resultado em uma lista usando ToList().
+		//Eles utilizam o método Select do LINQ para aplicar a conversão a cada item da lista de origem e,
+		//em seguida, convertem o resultado em uma lista usando ToList().
 		public List<Person> Parse(List<PersonVO> origin)
 		{
 			if (origin == null) return null;

@@ -51,6 +51,20 @@ namespace RestWithASPNETUdemy.Controllers
 			return Ok(person);
 		}
 
+		[HttpGet("findPersonByName")]
+		[ProducesResponseType((200), Type = typeof(PersonVO))]
+		[ProducesResponseType((204))]
+		[ProducesResponseType((400))]
+		[TypeFilter(typeof(HyperMediaFilter))]
+		public IActionResult Get([FromQuery] string? firstName = null, [FromQuery] string? lastName = null)
+		{
+			var person = _personBusiness.FindByName(firstName, lastName);
+			if (person == null)
+				return NotFound("PersonVO not found");
+
+			return Ok(person);
+		}
+
 		[HttpPost]
 		[ProducesResponseType((200), Type = typeof(PersonVO))]
 		[ProducesResponseType((400))]
@@ -76,6 +90,19 @@ namespace RestWithASPNETUdemy.Controllers
 
 			var updatedPerson = _personBusiness.Update(person);
 			return Ok(updatedPerson);
+		}
+
+
+		[HttpPatch("{id}")]
+		[ProducesResponseType((200), Type = typeof(List<PersonVO>))]
+		[ProducesResponseType((204))]
+		[ProducesResponseType((400))]
+		[ProducesResponseType((401))]
+		[TypeFilter(typeof(HyperMediaFilter))]
+		public IActionResult Patch(long id)
+		{
+			var persons = _personBusiness.Disable(id);
+			return Ok(persons);
 		}
 
 		[HttpDelete("{id}")]
