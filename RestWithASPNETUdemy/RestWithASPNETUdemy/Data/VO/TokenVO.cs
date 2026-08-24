@@ -1,6 +1,5 @@
 ﻿namespace RestWithASPNETUdemy.Data.VO
 {
-	// A classe TokenVO representa um objeto de valor que contém informações sobre o token de autenticação.
 	public class TokenVO
 	{
 		// Construtor que inicializa as propriedades do objeto TokenVO.

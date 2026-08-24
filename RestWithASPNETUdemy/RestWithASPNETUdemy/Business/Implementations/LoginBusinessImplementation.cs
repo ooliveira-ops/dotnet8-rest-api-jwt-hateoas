@@ -5,6 +5,7 @@ using RestWithASPNETUdemy.Configurations;
 using RestWithASPNETUdemy.Data.VO;
 using RestWithASPNETUdemy.Repository;
 using RestWithASPNETUdemy.Services;
+using RestWithASPNETUdemy.Services.Implementations;
 
 namespace RestWithASPNETUdemy.Business.Implementations
 {
@@ -60,6 +61,42 @@ namespace RestWithASPNETUdemy.Business.Implementations
 				accessToken,
 				refreshToken
 			);
+		}
+
+		public TokenVO ValidateCredentials(RefreshTokenVO token) // trocado de TokenVO para RefreshTokenVO
+		{
+			var accessToken = token.AccessToken;
+			var refreshToken = token.RefreshToken;
+
+			var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+
+			var username = principal.Identity.Name;
+			var user = _repository.ValidateCredentials(username);
+
+			if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+				return null;
+
+			accessToken = _tokenService.GenerateAccessToken(principal.Claims);
+			refreshToken = _tokenService.GenerateRefreshToken();
+
+			user.RefreshToken = refreshToken;
+			_repository.RefreshUserInfo(user);
+
+			DateTime createDate = DateTime.Now;
+			DateTime expirationDate = createDate.AddMinutes(_configuration.Minutes);
+
+			return new TokenVO(
+				true,
+				createDate.ToString(DATE_FORMAT),
+				expirationDate.ToString(DATE_FORMAT),
+				accessToken,
+				refreshToken
+			);
+		}
+
+		public bool RevokeToken(string userName)
+		{
+			return _repository.RevokeToken(userName);
 		}
 	}
 }

@@ -51,7 +51,8 @@ builder.Services.AddSingleton(filterOptions);
 
 //Isso é para configurar a conexão com o banco de dados SQLServer usando o Entity Framework
 var connectionString = builder.Configuration["SQLServerConnection:Connection"];
-builder.Services.AddDbContext<SQLServerContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<SQLServerContext>(options => options.UseSqlServer(connectionString)
+ .EnableSensitiveDataLogging());
 
 if (builder.Environment.IsDevelopment())
 {

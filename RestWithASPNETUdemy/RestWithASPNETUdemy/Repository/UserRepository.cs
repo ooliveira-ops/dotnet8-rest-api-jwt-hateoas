@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using RestWithASPNETUdemy.Data.VO;
+using RestWithASPNETUdemy.Model;
 using RestWithASPNETUdemy.Model.Context;
 
 namespace RestWithASPNETUdemy.Repository
@@ -23,7 +24,24 @@ namespace RestWithASPNETUdemy.Repository
 			return _context.Users.SingleOrDefault(u => (u.UserName == user.UserName) && (u.Password == pass));
 		}
 
-		// Método para atualizar as informações do usuário
+		// Método para validar as credenciais do usuário pelo nome de usuário
+		public User ValidateCredentials(string userName)
+		{
+			return _context.Users.SingleOrDefault(u => (u.UserName == userName));
+		}
+
+		// Método para revogar o token de atualização do usuário
+		public bool RevokeToken(string userName)
+		{
+			// Começa verificando se o usuário existe no banco de dados
+			var user = _context.Users.SingleOrDefault(u => (u.UserName == userName));
+			if (user is null) return false;
+			user.RefreshToken = null;
+			_context.SaveChanges();
+			return true;
+		}
+
+		// Método para atualizar as informações do usuário
 		public Model.User RefreshUserInfo(Model.User user)
 		{
 			// Verifica se: NÃO encontrar ninguem no banco com o mesmo ID e com o ID do user recebido = retorna nulo
@@ -54,5 +72,6 @@ namespace RestWithASPNETUdemy.Repository
 			Byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
 			return BitConverter.ToString(hashedBytes);
 		}
+
 	}
 }
