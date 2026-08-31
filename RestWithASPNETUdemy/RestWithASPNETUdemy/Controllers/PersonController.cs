@@ -25,16 +25,15 @@ namespace RestWithASPNETUdemy.Controllers
 			_personBusiness = personBusiness;			
 		}
 
-		[HttpGet]
+		[HttpGet("{sortDirection}/{pageSize}/{page}")]
 		[ProducesResponseType((200), Type = typeof(List<PersonVO>))]
 		[ProducesResponseType((204))]
 		[ProducesResponseType((400))]
 		[ProducesResponseType((401))]
 		[TypeFilter(typeof(HyperMediaFilter))]
-		public IActionResult FindAll()
+		public IActionResult Get(string sortDirection, int pageSize, int page, [FromQuery] string? name = null)
 		{
-			var persons = _personBusiness.FindAll();
-			return Ok(persons);
+			return Ok(_personBusiness.FindWithPagedSearch(name, sortDirection, pageSize, page));
 		}
 
 		[HttpGet("{id}")]
