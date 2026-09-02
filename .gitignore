@@ -45,3 +45,7 @@ Thumbs.db
 # Migrations
 **/db/migrations/
 **/db/dataset/
+
+# Arquivos
+**/UploadDir/*
+!**/UploadDir/.gitkeep
