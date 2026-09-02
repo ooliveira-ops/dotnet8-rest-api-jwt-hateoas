@@ -16,7 +16,7 @@ services:
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    contaidner_name: sqlserver
+    container_name: sqlserver
     ports:
       - "1433:1433"
     environment:
