@@ -1,7 +1,22 @@
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rest_api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - SQLServerConnection__Connection=Server=sqlserver,1433;Database=${DB_NAME};User Id=sa;Password=${DB_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true
+    depends_on:
+      - sqlserver
+    restart: always
+
+
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver
+    contaidner_name: sqlserver
     ports:
       - "1433:1433"
     environment:
